@@ -32,4 +32,4 @@ def test_cli_returns_nonzero_on_invalid_csv(tmp_path: Path, capsys) -> None:
     assert exit_code == 2
     assert not output_txt.exists()
     captured = capsys.readouterr()
-    assert "Рядок 2, поле 'months'" in captured.err
+    assert "Рядок 2: Тривалість абонемента" in captured.err

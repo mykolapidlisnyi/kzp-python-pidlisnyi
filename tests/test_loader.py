@@ -18,11 +18,12 @@ def test_load_valid_records_and_comma_in_text(tmp_path: Path) -> None:
     )
 
     records = load_records(csv_file)
+    records = load_records(csv_file)
     assert len(records) == 2
-    assert records[0]["client"] == "Ковальчук, Олексій"
-    assert records[0]["months"] == 12
-    assert records[0]["price"] == pytest.approx(12000.50)
-    assert records[1]["visits"] == 0
+    assert records[0].client == "Ковальчук, Олексій"
+    assert records[0].months == 12
+    assert records[0].price == pytest.approx(12000.50)
+    assert records[1].visits == 0
 
 
 def test_load_empty_csv_returns_empty_list(tmp_path: Path) -> None:
