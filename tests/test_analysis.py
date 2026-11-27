@@ -8,31 +8,26 @@ from kzp_lab06.analysis import (
     summarize,
     unique_clients,
 )
+from kzp_lab06.models import GymSubscription, PremiumSubscription, StandardSubscription
 from kzp_lab06.reporting import format_report
 
 
 @pytest.fixture
-def sample_records() -> list[dict[str, object]]:
+def sample_records() -> list[GymSubscription]:
     return [
-        {
-            "client": "Олексій",
-            "plan": "Full Unlimited",
-            "months": 12,
-            "visits": 120,
-            "price": 12000.0,
-        },
-        {"client": "Марія", "plan": "Standard Gym", "months": 3, "visits": 24, "price": 3200.0},
-        {"client": "Олексій", "plan": "Standard Gym", "months": 6, "visits": 50, "price": 5800.0},
+        PremiumSubscription("Олексій", "Full Unlimited", 12, 120, 12000.0, spa_hours=24),
+        StandardSubscription("Марія", "Standard Gym", 3, 24, 3200.0),
+        StandardSubscription("Олексій", "Standard Gym", 6, 50, 5800.0),
     ]
 
 
-def test_filtering_and_duplicates(sample_records: list[dict[str, object]]) -> None:
+def test_filtering_and_duplicates(sample_records: list[GymSubscription]) -> None:
     active = filter_active_subscriptions(sample_records, min_visits=50)
     assert len(active) == 2
     assert unique_clients(sample_records) == {"Олексій", "Марія"}
 
 
-def test_summarize_with_args_kwargs_and_default(sample_records: list[dict[str, object]]) -> None:
+def test_summarize_with_args_kwargs_and_default(sample_records: list[GymSubscription]) -> None:
     res = summarize(
         sample_records,
         "price",
@@ -51,7 +46,7 @@ def test_summarize_with_args_kwargs_and_default(sample_records: list[dict[str, o
         summarize(sample_records, "unknown_field")
 
 
-def test_deterministic_report_order(sample_records: list[dict[str, object]]) -> None:
+def test_deterministic_report_order(sample_records: list[GymSubscription]) -> None:
     summary = make_summary(sample_records)
     report = format_report(summary)
     assert "Full Unlimited: 12000.00 грн" in report
